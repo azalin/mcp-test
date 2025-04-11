@@ -2,7 +2,7 @@ name: izin-mcp
 language: python
 entry: python izin-mcp.py
 mcp:
-  tools:
+  handlers:
     - name: personel_list
       description: Personelin izin geçmişini döndürür.
     - name: izin_talep
