@@ -1,18 +1,11 @@
-version: '1'
-build:
-  dockerfile: Dockerfile
-  context: .
-deploy:
-  resources:
-    cpu: 1
-    memory: 1Gi
-  port: 8000
-  healthCheck:
-    path: /health
-    initialDelaySeconds: 10
-    periodSeconds: 30
-    timeoutSeconds: 5
-    failureThreshold: 3
-  env:
-    - name: LOG_LEVEL
-      value: "INFO"
+name: izin-mcp
+language: python
+entry: python izin-mcp.py
+mcp:
+  tools:
+    - name: personel_list
+      description: Personelin izin geçmişini döndürür.
+    - name: izin_talep
+      description: Yeni izin talebi oluşturur.
+    - name: izin_gun_sayisi
+      description: Kalan izin gününü döndürür.
