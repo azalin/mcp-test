@@ -1,14 +1,18 @@
 version: "3"
 services:
   n8n:
-    image: n8nio/n8n
+    build:
+      context: .
+      dockerfile: n8n.Dockerfile
     ports:
       - "5678:5678"
     environment:
       - N8N_MCP_CLIENTS=izin-mcp
       - N8N_MCP_IZIN_MCP_TYPE=stdio
-      - N8N_MCP_IZIN_MCP_COMMAND=/usr/local/bin/python /app/izin-mcp.py --mcp
+      - N8N_MCP_IZIN_MCP_COMMAND=/usr/bin/python3 /app/izin-mcp.py --mcp
       - N8N_MCP_IZIN_MCP_WORKING_DIR=/app
+      - PYTHONUNBUFFERED=1
+      - DB_PATH=/app/personel.db
     volumes:
       - ./:/app
     networks:
