@@ -7,7 +7,7 @@ services:
     environment:
       - N8N_MCP_CLIENTS=izin-mcp
       - N8N_MCP_IZIN_MCP_TYPE=stdio
-      - N8N_MCP_IZIN_MCP_COMMAND=/usr/local/bin/python /app/izin-mcp.py
+      - N8N_MCP_IZIN_MCP_COMMAND=/usr/local/bin/python /app/izin-mcp.py --mcp
       - N8N_MCP_IZIN_MCP_WORKING_DIR=/app
     volumes:
       - ./:/app
@@ -21,6 +21,8 @@ services:
     environment:
       - DB_PATH=/app/personel.db
       - PYTHONUNBUFFERED=1
+    ports:
+      - "8080:8080"
     volumes:
       - ./:/app
     networks:

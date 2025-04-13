@@ -3,8 +3,11 @@ import json
 import os
 import sqlite3
 from datetime import datetime
+from fastapi import FastAPI
 from mcp.server.fastmcp import FastMCP
-from mcp.types import TextContent, PromptMessage
+
+# FastAPI app oluşturma
+app = FastAPI()
 
 # MCP Server oluşturma
 mcp = FastMCP("Izin Takip")
@@ -16,7 +19,17 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-# İzin listesi tool
+# FastAPI endpoints
+@app.get("/permissions/{personel_id}")
+def list_permissions_api(personel_id: int):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM izinler WHERE personel_id = ?", (personel_id,))
+    rows = cursor.fetchall()
+    conn.close()
+    return [{"id": row[0], "personel_id": row[1], "baslangic": row[2], "bitis": row[3]} for row in rows]
+
+# MCP Tools
 @mcp.tool()
 async def list_permissions(personel_id: int) -> str:
     """Personelin izin listesini getirir"""
@@ -27,7 +40,6 @@ async def list_permissions(personel_id: int) -> str:
     conn.close()
     return json.dumps([{"id": row[0], "personel_id": row[1], "baslangic": row[2], "bitis": row[3]} for row in rows])
 
-# İzin talep tool
 @mcp.tool()
 async def request_permission(personel_id: int, baslangic: str, bitis: str) -> str:
     """Yeni izin talebi oluşturur"""
@@ -39,7 +51,6 @@ async def request_permission(personel_id: int, baslangic: str, bitis: str) -> st
     conn.close()
     return json.dumps({"status": "İzin talebi başarıyla oluşturuldu."})
 
-# Kalan izin günü tool
 @mcp.tool()
 async def remaining_days(personel_id: int) -> str:
     """Personelin kalan izin günlerini hesaplar"""
@@ -51,7 +62,13 @@ async def remaining_days(personel_id: int) -> str:
     conn.close()
     return json.dumps({"kalan_gun": total_days - used_days})
 
-# MCP Server'ı başlat
+# Mount MCP server to FastAPI app
+app.mount("/mcp", mcp.app)
+
 if __name__ == "__main__":
-    mcp.run()
+    if len(sys.argv) > 1 and sys.argv[1] == "--mcp":
+        mcp.run()
+    else:
+        import uvicorn
+        uvicorn.run(app, host="0.0.0.0", port=8080)
 
