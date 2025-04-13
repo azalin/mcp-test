@@ -13,4 +13,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Uvicorn'u çalıştır
-CMD ["uvicorn", "izin-mcp:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["python", "izin-mcp.py"]

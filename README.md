@@ -1,39 +1,58 @@
-# MCP-Test: Personel İzin Yönetim Sistemi
+# İzin Takip MCP Server
 
-Bu proje, MCP (Model Control Protocol) kullanarak personel izin yönetimini sağlayan bir API sunucusudur.
+Bu proje, personel izin takibi için geliştirilmiş bir MCP (Model Context Protocol) server uygulamasıdır.
 
 ## Özellikler
 
-- Personel izin geçmişi görüntüleme
-- İzin talep etme
-- Kalan izin günü sorgulama
-- Tarih çakışması kontrolü
+- Personel izin listesi görüntüleme
+- İzin talebi oluşturma
+- Kalan izin günü hesaplama
+- SQLite veritabanı entegrasyonu
+- MCP protokolü desteği
 
 ## Kurulum
 
 1. Gereksinimleri yükleyin:
+
 ```bash
 pip install -r requirements.txt
 ```
 
 2. Veritabanını oluşturun:
+
 ```bash
 python create_db.py
 ```
 
-3. Sunucuyu başlatın:
+## Docker ile Çalıştırma
+
+```bash
+docker-compose up --build
+```
+
+## MCP Server Kullanımı
+
+Server'a iki şekilde bağlanabilirsiniz:
+
+1. Doğrudan (Development):
+
 ```bash
 python izin-mcp.py
 ```
 
-## API Kullanımı
+2. Smithery.ai üzerinden (Production):
 
-MCP sunucusu `/sse` endpoint'i üzerinden aşağıdaki araçları sunar:
+- URL: https://smithery.ai/server/@azalin/mcp-test/api
+- Transport: STDIO
 
-1. `personel_list`: Belirli bir personelin izin geçmişini döndürür
-2. `izin_talep`: Yeni izin talebi oluşturur
-3. `izin_gun_sayisi`: Personelin izin gün sayısı bilgisini döndürür
+## n8n Entegrasyonu
+
+n8n'de MCP Client bağlantısı için:
+
+1. Connection Type: Command Line (STDIO)
+2. Command: python
+3. Arguments: -m mcp.client.stdio https://smithery.ai/server/@azalin/mcp-test/api
 
 ## Lisans
 
-MIT Lisansı 
+MIT

@@ -23,6 +23,24 @@ var/
 .installed.cfg
 *.egg
 
+# Virtual Environment
+venv/
+ENV/
+
+# Database
+*.db
+*.sqlite3
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
 # Ortam dosyaları
 .env
 .venv
