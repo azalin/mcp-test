@@ -1,0 +1,18 @@
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required:
+      - dbPath
+    properties:
+      dbPath:
+        type: string
+        description: Veritabanı dosyasının yolu
+  commandFunction: |-
+    (config) => ({
+      command: 'python',
+      args: ['izin-mcp.py'],
+      env: {
+        DB_PATH: config.dbPath
+      }
+    })
